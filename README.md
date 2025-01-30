@@ -1,7 +1,5 @@
 # node-file-manager
 
-## Available Scripts
-
 The program is started by npm-script `npm run` start in following way:
 
 ```bash
