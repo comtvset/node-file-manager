@@ -1,1 +1,3 @@
-console.log('start project');
+import { runFileManager } from './src/fileManager.js';
+
+runFileManager();
