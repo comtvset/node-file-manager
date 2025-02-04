@@ -1,18 +1,26 @@
+import { commands } from './commands.js';
+import { currentlyPaths } from './navigation.js';
 export const startSession = (user, rl) => {
-  const welcomeMessage = `\n\n\n\n\x1b[36m⋇⋇⋇ Welcome to the File Manager, ${user}! ⋇⋇⋇\n\x1b[31m(note: to terminate the program, press "ctrl + c" or sent .exit)\x1b[33m\n\x1b[37m\n`;
-  const farewellMessage = `\x1b[33mThank you for using File Manager, ${user}, goodbye!`;
+  const welcomeMessage = `\n\n\n\n\x1b[47m ⋇⋇⋇ \x1b[41m Welcome to the File Manager, ${user}! \x1b[47m ⋇⋇⋇ \x1b[0m\n\x1b[36m(note: to terminate the program, press "ctrl + c" or sent .exit)\x1b[33m\n\x1b[37m\n`;
+  const farewellMessage = `\x1b[94mThank you for using File Manager, ${user}, goodbye!\x1b[0m`;
 
   console.log(welcomeMessage);
   rl.setPrompt('> ');
+  currentlyPaths();
   rl.prompt();
 
-  rl.on('line', (line) => {
+  rl.on('line', async (line) => {
+    await commands(line);
     rl.prompt();
+
     if (line === '.exit') {
-      console.log(farewellMessage);
       rl.close();
+      console.log(farewellMessage);
     }
   });
 
-  rl.on('close', () => console.log(farewellMessage));
+  rl.on('close', () => {
+    console.log(farewellMessage);
+    process.exit(0);
+  });
 };
