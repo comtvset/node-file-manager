@@ -7,8 +7,13 @@ const homeDir = os.homedir();
 const baseDir = join(homeDir);
 let currentDir = homeDir;
 
-export const currentlyPaths = async () => {
-  console.log(`\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
+export const currentlyPaths = async (notShow) => {
+  if (notShow) {
+    console.log('');
+  } else {
+    console.log(`\n\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
+  }
+
   return currentDir;
 };
 
@@ -28,11 +33,11 @@ export const createPath = async (line) => {
 
     if (!getFilesCurrentDir.includes(folderArray[i])) {
       if (folderArray[i] === '') {
-        return console.error(
+        console.error(
           `\x1b[31m>>> Error: Directory name cannot be empty \x1b[0m\n\x1b[36m(note: you can check the directory with help "ls" command\x1b[0m`
         );
       } else {
-        return console.error(
+        console.error(
           `\x1b[31m>>> Error: Directory \x1b[93m${folderArray[i]}\x1b[31m does not exist \n\x1b[36m(note: you can check the directory with help "ls" command\x1b[0m`
         );
       }
@@ -42,7 +47,7 @@ export const createPath = async (line) => {
       if (stats.isDirectory()) {
         currentDir = path.resolve(currentDir, folderArray[i]);
       } else {
-        return console.error(
+        console.error(
           `\x1b[31m>>> Error, "${folderArray[i]}" is not a folder\x1b[0m`
         );
       }
@@ -68,6 +73,7 @@ export const showDir = async () => {
     );
   };
   await readDir(currentDir);
+  currentlyPaths();
 };
 
 export const stepBack = async () => {
