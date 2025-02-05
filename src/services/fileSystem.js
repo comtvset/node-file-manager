@@ -7,6 +7,7 @@ import {
   writeFile,
   mkdir,
   rm,
+  rename,
 } from 'node:fs/promises';
 import { join, extname } from 'node:path';
 
@@ -79,18 +80,18 @@ export const creator = async (line) => {
   }
 };
 
-export const remove = async (line) => {
+export const removeFileOrFolder = async (line) => {
   const currentDir = await currentlyPaths('notShow');
   const file = line.slice(2).trim();
   const fileToRemovePath = join(currentDir, file);
 
-  const entity = 'File';
+  const entity = 'File/Folder';
 
   try {
     const files = await readdir(currentDir);
 
     if (file === '') {
-      throw new Error(`No file or folder specified for deletion`);
+      throw new Error(`No ${entity} specified for deletion`);
     }
 
     if (!files.includes(file)) {
@@ -105,6 +106,61 @@ export const remove = async (line) => {
     console.log(`\n\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
   } catch (error) {
     console.log(`\x1b[31m>>> Error: ${error.message} \x1b[0m`);
+    currentlyPaths();
+  }
+};
+
+export const renameFileOrFolder = async (line) => {
+  const note = `\n\x1b[36m(note: if folder or file name contains spaces, enclose it in double quotes)\nexample with double quotes: rn "old folder" "new name folder\nexample without double quotes: rn oldFolder newNameFolder"\x1b[33m\n\x1b[37m`;
+  const currentDir = await currentlyPaths('notShow');
+
+  let arg1 = null;
+  let arg2 = null;
+
+  try {
+    if (line.length <= 4) {
+      throw new Error(`"rn" command requires two arguments`);
+    }
+
+    const regex = /^rn\s+"(.+)"\s+"(.+)"$/;
+    const match = line.match(regex);
+    const file = line.slice(2).trim();
+
+    const lineArray = line.split(' ');
+
+    if (match) {
+      arg1 = match[1];
+      arg2 = match[2];
+    } else {
+      arg1 = line.split(' ')[1].trim();
+      if (!lineArray[2] || lineArray[3]) {
+        throw new Error(`"rn" command requires two arguments`);
+      }
+      arg2 = line.split(' ')[2].trim();
+    }
+
+    const type1 = join(currentDir, arg1);
+    const type2 = join(currentDir, arg2);
+
+    const entity = 'File/Folder';
+    const files = await readdir(currentDir);
+
+    if (file === '') {
+      throw new Error(`No ${entity} specified for rename`);
+    }
+
+    if (!files.includes(arg1)) {
+      throw new Error(`${entity} does not exist`);
+    }
+
+    await rename(type1, type2);
+
+    console.log(
+      `\x1b[36m${entity} from\x1b[33m ${arg1} \x1b[36mto \x1b[33m${arg2}\x1b[0m \x1b[36mwas renamed\x1b[0m`
+    );
+    console.log(`\n\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
+  } catch (error) {
+    console.log(`\x1b[31m>>> Error: ${error.message} \x1b[0m ${note}`);
     currentlyPaths();
   }
 };

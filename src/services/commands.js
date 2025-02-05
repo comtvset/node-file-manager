@@ -1,5 +1,5 @@
 import { createPath, showDir, stepBack } from './navigation.js';
-import { reader, creator, remove } from './fileSystem.js';
+import { reader, creator, removeFileOrFolder, renameFileOrFolder } from './fileSystem.js';
 
 export const commands = async (line) => {
   const command = line.trim().split(' ');
@@ -29,7 +29,10 @@ export const commands = async (line) => {
       await creator(line);
       break;
     case 'rm':
-      await remove(line);
+      await removeFileOrFolder(line);
+      break;
+    case 'rn':
+      await renameFileOrFolder(line);
       break;
     default:
       console.log(
