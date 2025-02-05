@@ -7,8 +7,9 @@ const homeDir = os.homedir();
 const baseDir = join(homeDir);
 let currentDir = homeDir;
 
-export const currentlyPaths = () => {
+export const currentlyPaths = async () => {
   console.log(`\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
+  return currentDir;
 };
 
 export const createPath = async (line) => {
@@ -24,6 +25,7 @@ export const createPath = async (line) => {
 
   for (let i = 0; i < folderArray.length; i++) {
     await readDir(currentDir);
+
     if (!getFilesCurrentDir.includes(folderArray[i])) {
       if (folderArray[i] === '') {
         return console.error(
@@ -52,7 +54,18 @@ export const createPath = async (line) => {
 
 export const showDir = async () => {
   const readDir = async (dir) => {
-    console.log(await readdir(dir));
+    const files = await readdir(dir, { withFileTypes: true });
+
+    const sortFiles = files.sort((a, b) => {
+      return a.isDirectory() === b.isDirectory() ? 0 : a.isDirectory() ? -1 : 1;
+    });
+
+    console.table(
+      sortFiles.map((file) => ({
+        Name: file.name,
+        Type: file.isDirectory() ? 'directory' : 'file',
+      }))
+    );
   };
   await readDir(currentDir);
 };
