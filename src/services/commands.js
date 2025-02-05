@@ -1,4 +1,5 @@
 import { createPath, showDir, stepBack } from './navigation.js';
+import { reader } from './fileSystem.js'
 
 export const commands = async (line) => {
   const command = line.trim().split(' ');
@@ -17,6 +18,9 @@ export const commands = async (line) => {
       break;
     case 'help':
       console.log('opening help.....'); //TODO: implement help
+      break;
+    case 'cat':
+      await reader(line);
       break;
     default:
       console.log(
