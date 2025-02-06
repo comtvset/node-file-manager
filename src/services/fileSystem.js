@@ -8,12 +8,17 @@ import {
   mkdir,
   rm,
   rename,
+  cp,
+  copyFile,
+  stat,
 } from 'node:fs/promises';
-import { join, extname } from 'node:path';
+import { join } from 'node:path';
+import path from 'node:path';
 
-export const reader = async (line) => {
+export const readFileTxt = async (line) => {
   const currentDir = await currentlyPaths();
-  const file = line.slice(4);
+
+  const file = line.slice(4).trim();
   let fileToReadPath = join(currentDir, file);
 
   try {
@@ -23,21 +28,18 @@ export const reader = async (line) => {
     if (!file) {
       throw new Error('No file specified');
     }
-    if (extname(fileToReadPath) !== '.txt') {
-      throw new Error('Only .txt files can be read');
-    }
 
     await access(fileToReadPath, constants.F_OK);
-    console.log('\n\x1b[33m>>>\x1b[90m');
+    console.log('\n\x1b[33m>>>\n\x1b[90m');
     console.log(await readFile(fileToReadPath, 'utf8'));
-    console.log('\x1b[33m<<<\x1b[0m\n');
+    console.log('\x1b[33m\n<<<\x1b[0m\n');
   } catch (error) {
     console.log(`\x1b[31m>>> Error: ${error.message} \x1b[0m`);
     currentlyPaths();
   }
 };
 
-export const creator = async (line) => {
+export const createFileOrDirectory = async (line) => {
   const currentDir = await currentlyPaths('notShow');
   const command = line.split(' ')[0].trim();
   const type = command === 'add' ? line.slice(3).trim() : line.slice(6).trim();
@@ -80,7 +82,7 @@ export const creator = async (line) => {
   }
 };
 
-export const removeFileOrFolder = async (line) => {
+export const removeFileOrDirectory = async (line) => {
   const currentDir = await currentlyPaths('notShow');
   const file = line.slice(2).trim();
   const fileToRemovePath = join(currentDir, file);
@@ -110,7 +112,7 @@ export const removeFileOrFolder = async (line) => {
   }
 };
 
-export const renameFileOrFolder = async (line) => {
+export const renameFileOrDirectory = async (line) => {
   const note = `\n\x1b[36m(note: if folder or file name contains spaces, enclose it in double quotes)\nexample with double quotes: rn "old folder" "new name folder\nexample without double quotes: rn oldFolder newNameFolder"\x1b[33m\n\x1b[37m`;
   const currentDir = await currentlyPaths('notShow');
 
@@ -126,17 +128,18 @@ export const renameFileOrFolder = async (line) => {
     const match = line.match(regex);
     const file = line.slice(2).trim();
 
-    const lineArray = line.split(' ');
+    const lineArray = line.trim().split(' ').filter(Boolean);
 
     if (match) {
       arg1 = match[1];
       arg2 = match[2];
     } else {
-      arg1 = line.split(' ')[1].trim();
+      arg1 = lineArray[1];
+
       if (!lineArray[2] || lineArray[3]) {
         throw new Error(`"rn" command requires two arguments`);
       }
-      arg2 = line.split(' ')[2].trim();
+      arg2 = lineArray[2];
     }
 
     const type1 = join(currentDir, arg1);
@@ -161,6 +164,86 @@ export const renameFileOrFolder = async (line) => {
     console.log(`\n\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
   } catch (error) {
     console.log(`\x1b[31m>>> Error: ${error.message} \x1b[0m ${note}`);
+    currentlyPaths();
+  }
+};
+
+export const copyOrMoveFileOrDirectory = async (line) => {
+  const currentDir = await currentlyPaths('notShow');
+
+  const lineArray = line.trim().split(' ').filter(Boolean);
+
+  try {
+    if (lineArray.length <= 2) {
+      throw new Error(`"cp" command requires two arguments`);
+    }
+
+    console.log(lineArray); //TODO: issue target folder "my Folder"
+
+    const command = lineArray[0];
+
+    // const arg1 = line.split(' ')[1].trim();
+    // const arg2 = line.split(' ')[2].trim();
+    const arg1 = line.split(' ')[1];
+    const arg2 = line.split(' ')[2];
+    const files = await readdir(path.dirname(arg1));
+
+    if (!files.includes(path.basename(arg1))) {
+      throw new Error(`${arg1} does not exist`);
+    }
+
+    const stats = await stat(arg1);
+
+    if (stats.isDirectory()) {
+      if (command === 'cp') {
+        await cp(arg1, `${arg2}\\${path.basename(arg1)}`, { recursive: true });
+        console.log(
+          `\x1b[36mFolder \x1b[33m${path.basename(
+            arg2
+          )}\x1b[0m \x1b[36mwas coped!\x1b[0m`
+        );
+      }
+      if (command === 'mv') {
+        await cp(arg1, `${arg2}\\${path.basename(arg1)}`, { recursive: true });
+        await rm(arg1, { recursive: true });
+        console.log(
+          `\x1b[36mFolder \x1b[33m${path.basename(
+            arg1
+          )}\x1b[0m \x1b[36mwas moved!\x1b[0m`
+        );
+      }
+    }
+
+    if (stats.isFile()) {
+      if (command === 'cp') {
+        await mkdir(join(path.dirname(arg2), path.basename(arg2)), {
+          recursive: true,
+        });
+        await copyFile(arg1, `${arg2}\\${path.basename(arg1)}`);
+
+        console.log(
+          `\x1b[36mFile \x1b[33m${path.basename(
+            arg1
+          )}\x1b[0m \x1b[36mwas coped!\x1b[0m`
+        );
+      }
+      if (command === 'mv') {
+        await mkdir(join(path.dirname(arg2), path.basename(arg2)), {
+          recursive: true,
+        });
+        await copyFile(arg1, `${arg2}\\${path.basename(arg1)}`);
+        await rm(arg1);
+        console.log(
+          `\x1b[36mFile \x1b[33m${path.basename(
+            arg1
+          )}\x1b[0m \x1b[36mwas moved!\x1b[0m`
+        );
+      }
+    }
+
+    console.log(`\n\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
+  } catch (error) {
+    console.log(`\x1b[31m>>> Error: ${error.message} \x1b[0m`);
     currentlyPaths();
   }
 };

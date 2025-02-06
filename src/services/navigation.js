@@ -57,7 +57,7 @@ export const createPath = async (line) => {
   currentlyPaths();
 };
 
-export const showDir = async () => {
+export const listDirectory = async () => {
   const readDir = async (dir) => {
     const files = await readdir(dir, { withFileTypes: true });
 

@@ -1,5 +1,12 @@
-import { createPath, showDir, stepBack } from './navigation.js';
-import { reader, creator, removeFileOrFolder, renameFileOrFolder } from './fileSystem.js';
+import { createPath, listDirectory, stepBack } from './navigation.js';
+import {
+  readFileTxt,
+  createFileOrDirectory,
+  removeFileOrDirectory,
+  renameFileOrDirectory,
+  copyOrMoveFileOrDirectory,
+} from './fileSystem.js';
+import { help } from './help.js';
 
 export const commands = async (line) => {
   const command = line.trim().split(' ');
@@ -9,7 +16,7 @@ export const commands = async (line) => {
       await createPath(line.slice(2).trim());
       break;
     case 'ls':
-      await showDir();
+      await listDirectory();
       break;
     case 'up':
       await stepBack();
@@ -17,22 +24,28 @@ export const commands = async (line) => {
     case '.exit':
       break;
     case 'help':
-      console.log('opening help.....'); //TODO: implement help
+      await help();
       break;
     case 'cat':
-      await reader(line);
+      await readFileTxt(line);
       break;
     case 'add':
-      await creator(line);
+      await createFileOrDirectory(line);
       break;
     case 'mkdir':
-      await creator(line);
+      await createFileOrDirectory(line);
       break;
     case 'rm':
-      await removeFileOrFolder(line);
+      await removeFileOrDirectory(line);
       break;
     case 'rn':
-      await renameFileOrFolder(line);
+      await renameFileOrDirectory(line);
+      break;
+    case 'cp':
+      await copyOrMoveFileOrDirectory(line);
+      break;
+    case 'mv':
+      await copyOrMoveFileOrDirectory(line);
       break;
     default:
       console.log(
