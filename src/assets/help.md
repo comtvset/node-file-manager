@@ -23,7 +23,7 @@
                                   example: cp C:\Users\User\copyFile.txt C:\Users\User\newFolder
 
  mv <source> <destination>        Moves a file or directory to a new location
-                                  example: mv C:\Users\User\moveFile.txt C:\Users\User\newFolder
+                                  example: mv "C:\Users\User\moveFile.txt" "C:\Users\User\new Folder"
 
  ls                               Lists the contents of the current directory
 
