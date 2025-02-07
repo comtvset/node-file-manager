@@ -15,6 +15,8 @@ import {
 import { join } from 'node:path';
 import path from 'node:path';
 
+const note = `\n\x1b[36m(note: if folder or file name contains spaces, enclose it in double quotes)\nexample with double quotes: rn "old folder" "new name folder\nexample without double quotes: rn oldFolder newNameFolder"\x1b[33m\n\x1b[37m`;
+
 export const readFileTxt = async (line) => {
   const currentDir = await currentlyPaths();
 
@@ -26,7 +28,7 @@ export const readFileTxt = async (line) => {
       fileToReadPath = line.slice(4);
     }
     if (!file) {
-      throw new Error('No file specified');
+      throw new Error('No file specified!');
     }
 
     await access(fileToReadPath, constants.F_OK);
@@ -51,11 +53,11 @@ export const createFileOrDirectory = async (line) => {
     const files = await readdir(currentDir);
 
     if (!type) {
-      throw new Error(`No ${entity} specified`);
+      throw new Error(`No ${entity} specified!`);
     }
 
     if (files.includes(type)) {
-      throw new Error(`${entity} already exists`);
+      throw new Error(`${entity} already exists!`);
     }
 
     if (/[\\/:\*\?"<>|]/.test(type)) {
@@ -73,7 +75,7 @@ export const createFileOrDirectory = async (line) => {
     }
 
     console.log(
-      `\x1b[36m${entity} \x1b[33m${type}\x1b[0m \x1b[36mwas created\x1b[0m`
+      `\x1b[36m${entity} \x1b[33m${type}\x1b[0m \x1b[36mwas created!\x1b[0m`
     );
     console.log(`\n\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
   } catch (error) {
@@ -93,17 +95,17 @@ export const removeFileOrDirectory = async (line) => {
     const files = await readdir(currentDir);
 
     if (file === '') {
-      throw new Error(`No ${entity} specified for deletion`);
+      throw new Error(`No ${entity} specified for deletion!`);
     }
 
     if (!files.includes(file)) {
-      throw new Error(`${file} does not exist`);
+      throw new Error(`${file} does not exist!`);
     }
 
     await rm(fileToRemovePath, { recursive: true, force: true });
 
     console.log(
-      `\x1b[36m${entity} \x1b[33m${file}\x1b[0m \x1b[36mwas deleted\x1b[0m`
+      `\x1b[36m${entity} \x1b[33m${file}\x1b[0m \x1b[36mwas deleted!\x1b[0m`
     );
     console.log(`\n\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
   } catch (error) {
@@ -113,7 +115,6 @@ export const removeFileOrDirectory = async (line) => {
 };
 
 export const renameFileOrDirectory = async (line) => {
-  const note = `\n\x1b[36m(note: if folder or file name contains spaces, enclose it in double quotes)\nexample with double quotes: rn "old folder" "new name folder\nexample without double quotes: rn oldFolder newNameFolder"\x1b[33m\n\x1b[37m`;
   const currentDir = await currentlyPaths('notShow');
 
   let arg1 = null;
@@ -132,7 +133,7 @@ export const renameFileOrDirectory = async (line) => {
 
     if (match) {
       arg1 = match[1];
-      arg2 = match[2];
+      arg2 = match[2].trim();
     } else {
       arg1 = lineArray[1];
 
@@ -153,13 +154,13 @@ export const renameFileOrDirectory = async (line) => {
     }
 
     if (!files.includes(arg1)) {
-      throw new Error(`${entity} does not exist`);
+      throw new Error(`${entity} does not exist!`);
     }
 
     await rename(type1, type2);
 
     console.log(
-      `\x1b[36m${entity} from\x1b[33m ${arg1} \x1b[36mto \x1b[33m${arg2}\x1b[0m \x1b[36mwas renamed\x1b[0m`
+      `\x1b[36m${entity} from\x1b[33m ${arg1} \x1b[36mto \x1b[33m${arg2}\x1b[0m \x1b[36mwas renamed!\x1b[0m`
     );
     console.log(`\n\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
   } catch (error) {
@@ -171,25 +172,38 @@ export const renameFileOrDirectory = async (line) => {
 export const copyOrMoveFileOrDirectory = async (line) => {
   const currentDir = await currentlyPaths('notShow');
 
-  const lineArray = line.trim().split(' ').filter(Boolean);
+  let arg1 = null;
+  let arg2 = null;
 
   try {
-    if (lineArray.length <= 2) {
-      throw new Error(`"cp" command requires two arguments`);
-    }
-
-    console.log(lineArray); //TODO: issue target folder "my Folder"
-
+    const lineArray = line.trim().split(' ').filter(Boolean);
     const command = lineArray[0];
 
-    // const arg1 = line.split(' ')[1].trim();
-    // const arg2 = line.split(' ')[2].trim();
-    const arg1 = line.split(' ')[1];
-    const arg2 = line.split(' ')[2];
+    if (line.length <= 4) {
+      throw new Error(`"${command}" command requires two arguments`);
+    }
+
+    const regex = /^mv\s+"(.+)"\s+"(.+)"$/;
+    const match = line.match(regex);
+
+    if (match) {
+      arg1 = match[1];
+      arg2 = match[2];
+      console.log(arg1);
+      console.log(arg2);
+    } else {
+      arg1 = lineArray[1];
+
+      if (!lineArray[2] || lineArray[3]) {
+        throw new Error(`"${command}" command requires two arguments`);
+      }
+      arg2 = lineArray[2];
+    }
+
     const files = await readdir(path.dirname(arg1));
 
     if (!files.includes(path.basename(arg1))) {
-      throw new Error(`${arg1} does not exist`);
+      throw new Error(`${arg1} does not exist!`);
     }
 
     const stats = await stat(arg1);
@@ -243,7 +257,7 @@ export const copyOrMoveFileOrDirectory = async (line) => {
 
     console.log(`\n\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
   } catch (error) {
-    console.log(`\x1b[31m>>> Error: ${error.message} \x1b[0m`);
+    console.log(`\x1b[31m>>> Error: ${error.message} \x1b[0m ${note}`);
     currentlyPaths();
   }
 };
