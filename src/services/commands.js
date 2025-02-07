@@ -7,6 +7,7 @@ import {
   copyOrMoveFileOrDirectory,
 } from './fileSystem.js';
 import { help } from './help.js';
+import { osInformation } from './operatingSystem.js';
 
 export const commands = async (line) => {
   const command = line.trim().split(' ');
@@ -47,9 +48,12 @@ export const commands = async (line) => {
     case 'mv':
       await copyOrMoveFileOrDirectory(line);
       break;
+    case 'os':
+      await osInformation(line);
+      break;
     default:
       console.log(
-        `\x1b[90mUnknown operation \x1b[91m${command[0]} \n\x1b[36m(note: you can check the available commands by sending the command "help")\x1b[33m\n\x1b[37m\n\x1b[33mPlease try again!\x1b[0m`
+        `\n\x1b[90mUnknown operation \x1b[91m${command[0]} \n\x1b[36m(note: you can check the available commands by sending the command "help")\x1b[33m\n\x1b[37m\n\x1b[33mPlease try again!\x1b[0m`
       );
   }
 };

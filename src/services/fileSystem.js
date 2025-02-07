@@ -191,12 +191,8 @@ export const copyOrMoveFileOrDirectory = async (line) => {
     if (match) {
       arg1 = match[1];
       arg2 = match[2];
-      console.log(arg1);
-      console.log(arg2);
     } else {
       arg1 = lineArray[1];
-
-      console.log(lineArray);
 
       if (!lineArray[2] || lineArray[3]) {
         throw new Error(`"${command}" command requires two arguments`);
