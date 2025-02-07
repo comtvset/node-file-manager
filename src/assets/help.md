@@ -25,6 +25,16 @@
  mv <source> <destination>        Moves a file or directory to a new location
                                   example: mv "C:\Users\User\moveFile.txt" "C:\Users\User\new Folder"
 
+ os --EOL                         Display the default End-Of-Line sequence for the current OS
+
+    --cpus                        Show information about available CPU cores
+
+    --homedir                     Show the path to the home directory
+
+    --username                    Show the current user's name
+
+    --architecture                Display the CPU architecture of the system
+
  ls                               Lists the contents of the current directory
 
  help                             Displays this help message
