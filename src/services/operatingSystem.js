@@ -5,7 +5,9 @@ export const osInformation = async (line) => {
   const lineArray = line.trim().split(' ').filter(Boolean);
 
   if (lineArray.length <= 1) {
-    console.log(`\n\x1b[36mPlease specify a flag (e.g., --EOL, --cpus, --homedir, etc.)`);
+    console.log(
+      `\n\x1b[36mPlease specify a flag (e.g., --EOL, --cpus, --homedir, etc.)`
+    );
     currentlyPaths();
     return;
   }

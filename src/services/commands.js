@@ -8,6 +8,7 @@ import {
 } from './fileSystem.js';
 import { help } from './help.js';
 import { osInformation } from './operatingSystem.js';
+import { calculateHash } from './calcHash.js';
 
 export const commands = async (line) => {
   const command = line.trim().split(' ');
@@ -50,6 +51,9 @@ export const commands = async (line) => {
       break;
     case 'os':
       await osInformation(line);
+      break;
+    case 'hash':
+      await calculateHash(line);
       break;
     default:
       console.log(

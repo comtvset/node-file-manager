@@ -261,7 +261,7 @@ export const copyOrMoveFileOrDirectory = async (line) => {
 
     console.log(`\n\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
   } catch (error) {
-    console.log(`\x1b[31m>>> Error: ${error.message} \x1b[0m ${note}`);
+    console.log(`\n\x1b[31m>>> Error: ${error.message} \x1b[0m ${note}`);
     currentlyPaths();
   }
 };
