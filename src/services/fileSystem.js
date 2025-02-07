@@ -18,7 +18,7 @@ import path from 'node:path';
 const note = `\n\x1b[36m(note: if folder or file name contains spaces, enclose it in double quotes)\nexample with double quotes: rn "old folder" "new name folder\nexample without double quotes: rn oldFolder newNameFolder"\x1b[33m\n\x1b[37m`;
 
 export const readFileTxt = async (line) => {
-  const currentDir = await currentlyPaths();
+  const currentDir = await currentlyPaths('notShow');
 
   const file = line.slice(4).trim();
   let fileToReadPath = join(currentDir, file);
@@ -35,6 +35,7 @@ export const readFileTxt = async (line) => {
     console.log('\n\x1b[33m>>>\n\x1b[90m');
     console.log(await readFile(fileToReadPath, 'utf8'));
     console.log('\x1b[33m\n<<<\x1b[0m\n');
+    console.log(`\n\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
   } catch (error) {
     console.log(`\x1b[31m>>> Error: ${error.message} \x1b[0m`);
     currentlyPaths();
@@ -183,8 +184,9 @@ export const copyOrMoveFileOrDirectory = async (line) => {
       throw new Error(`"${command}" command requires two arguments`);
     }
 
-    const regex = /^mv\s+"(.+)"\s+"(.+)"$/;
-    const match = line.match(regex);
+    const regexCP = /^cp\s+"(.+)"\s+"(.+)"$/;
+    const regexMV = /^mv\s+"(.+)"\s+"(.+)"$/;
+    const match = command === 'cp' ? line.match(regexCP): line.match(regexMV);
 
     if (match) {
       arg1 = match[1];
@@ -193,6 +195,8 @@ export const copyOrMoveFileOrDirectory = async (line) => {
       console.log(arg2);
     } else {
       arg1 = lineArray[1];
+
+      console.log(lineArray);
 
       if (!lineArray[2] || lineArray[3]) {
         throw new Error(`"${command}" command requires two arguments`);
@@ -210,7 +214,9 @@ export const copyOrMoveFileOrDirectory = async (line) => {
 
     if (stats.isDirectory()) {
       if (command === 'cp') {
-        await cp(arg1, `${arg2}\\${path.basename(arg1)}`, { recursive: true });
+        await cp(arg1, `${arg2}${path.sep}${path.basename(arg1)}`, {
+          recursive: true,
+        });
         console.log(
           `\x1b[36mFolder \x1b[33m${path.basename(
             arg2
@@ -218,7 +224,9 @@ export const copyOrMoveFileOrDirectory = async (line) => {
         );
       }
       if (command === 'mv') {
-        await cp(arg1, `${arg2}\\${path.basename(arg1)}`, { recursive: true });
+        await cp(arg1, `${arg2}${path.sep}${path.basename(arg1)}`, {
+          recursive: true,
+        });
         await rm(arg1, { recursive: true });
         console.log(
           `\x1b[36mFolder \x1b[33m${path.basename(
@@ -233,7 +241,7 @@ export const copyOrMoveFileOrDirectory = async (line) => {
         await mkdir(join(path.dirname(arg2), path.basename(arg2)), {
           recursive: true,
         });
-        await copyFile(arg1, `${arg2}\\${path.basename(arg1)}`);
+        await copyFile(arg1, `${arg2}${path.sep}${path.basename(arg1)}`);
 
         console.log(
           `\x1b[36mFile \x1b[33m${path.basename(
@@ -245,7 +253,7 @@ export const copyOrMoveFileOrDirectory = async (line) => {
         await mkdir(join(path.dirname(arg2), path.basename(arg2)), {
           recursive: true,
         });
-        await copyFile(arg1, `${arg2}\\${path.basename(arg1)}`);
+        await copyFile(arg1, `${arg2}${path.sep}${path.basename(arg1)}`);
         await rm(arg1);
         console.log(
           `\x1b[36mFile \x1b[33m${path.basename(
