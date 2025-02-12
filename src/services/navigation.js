@@ -82,10 +82,10 @@ export const stepBack = async () => {
     .map((item) => item.trim())
     .slice(0, -1)
     .toString()
-    .replaceAll(',', '\\');
+    .replaceAll(',', path.sep);
 
   if (cut.length <= 2) {
-    currentDir = `${cut}\\`;
+    currentDir = `${cut}${path.sep}`;
   } else {
     currentDir = cut;
   }
