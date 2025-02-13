@@ -36,6 +36,7 @@
     --architecture                Display the CPU architecture of the system
 
  hash <path>                      Display the hash of the specified file
+                                  example: hash C:\Users\User\checkFile.txt
 
  compress <path> <destination>    Compress the specified file to the destination path
                                   example: compress C:\Users\User\compressFile.txt C:\Users\User\newFolder\nameFile
