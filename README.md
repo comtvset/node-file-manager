@@ -1,6 +1,6 @@
 # node-file-manager
 
- ![](https://github.com/comtvset/node-file-manager/blob/develop/src/assets/cover.png)
+![](https://github.com/comtvset/node-file-manager/blob/develop/src/assets/cover.png)
 
 The program is started by npm-script `npm run` start in following way:
 
@@ -36,7 +36,7 @@ npm  run  start
 | &nbsp;     | `--homedir`      | Show the path to the home directory                         |
 | &nbsp;     | `--username`     | Show the current user's name                                |
 | &nbsp;     | `--architecture` | Display the CPU architecture of the system                  |
-| hash       |                  | Display the hash of the specified file                      |
+| hash       |                  | Display the hash of the specified file                      | `hash C:\Users\User\checkFile.txt`                                                        |
 | compress   |                  | Compress the specified file to the destination path         | `compress C:\Users\User\compressFile.txt C:\Users\User\newFolder\nameFile`                |
 | decompress |                  | Decompress the specified file to the destination path       | `decompress "C:\Users\User\my compress file.jpg.br" "C:\Users\User\new folder\name file"` |
 | ls         |                  | Lists the contents of the current directory                 |
