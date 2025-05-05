@@ -18,6 +18,12 @@ npm run start
 
 ```
 
+### Case Sensitivity Notice ⚠️⚠️⚠️
+File-Manager is case-sensitive when handling file paths. Always use the exact casing as shown in File Explorer.
+
+✅ Correct: `C:\Users\User\My Folder`  
+❌ Incorrect: `c:\users\user\my folder`
+
 ### Available commands:
 
 | command    | flag             | description                                                 | example                                                                                   |
