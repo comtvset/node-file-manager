@@ -37,7 +37,7 @@ export const readFileTxt = async (line) => {
     console.log('\x1b[33m\n<<<\x1b[0m\n');
     console.log(`\n\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
   } catch (error) {
-    console.log(`\x1b[31m>>> Error: ${error.message} \x1b[0m`);
+    console.error(`\x1b[31m>>> Error: ${error.message} \x1b[0m`);
     currentlyPaths();
   }
 };
@@ -80,7 +80,7 @@ export const createFileOrDirectory = async (line) => {
     );
     console.log(`\n\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
   } catch (error) {
-    console.log(`\x1b[31m>>> Error: ${error.message} \x1b[0m`);
+    console.error(`\x1b[31m>>> Error: ${error.message} \x1b[0m`);
     currentlyPaths();
   }
 };
@@ -110,7 +110,7 @@ export const removeFileOrDirectory = async (line) => {
     );
     console.log(`\n\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
   } catch (error) {
-    console.log(`\x1b[31m>>> Error: ${error.message} \x1b[0m`);
+    console.error(`\x1b[31m>>> Error: ${error.message} \x1b[0m`);
     currentlyPaths();
   }
 };
@@ -165,7 +165,7 @@ export const renameFileOrDirectory = async (line) => {
     );
     console.log(`\n\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
   } catch (error) {
-    console.log(`\x1b[31m>>> Error: ${error.message} \x1b[0m ${note}`);
+    console.error(`\x1b[31m>>> Error: ${error.message} \x1b[0m ${note}`);
     currentlyPaths();
   }
 };
@@ -186,7 +186,7 @@ export const copyOrMoveFileOrDirectory = async (line) => {
 
     const regexCP = /^cp\s+"(.+)"\s+"(.+)"$/;
     const regexMV = /^mv\s+"(.+)"\s+"(.+)"$/;
-    const match = command === 'cp' ? line.match(regexCP): line.match(regexMV);
+    const match = command === 'cp' ? line.match(regexCP) : line.match(regexMV);
 
     if (match) {
       arg1 = match[1];
@@ -261,7 +261,7 @@ export const copyOrMoveFileOrDirectory = async (line) => {
 
     console.log(`\n\x1b[32mYou are currently in ${currentDir}\x1b[0m`);
   } catch (error) {
-    console.log(`\n\x1b[31m>>> Error: ${error.message} \x1b[0m ${note}`);
+    console.error(`\n\x1b[31m>>> Error: ${error.message} \x1b[0m ${note}`);
     currentlyPaths();
   }
 };

@@ -96,7 +96,11 @@ export const encoding = async (line) => {
       });
     }
   } catch (error) {
-    console.log(`\x1b[31m>>> Error: ${error.message} \x1b[0m`);
+    console.error(`\x1b[31m>>> Error: ${error.message} \x1b[0m`);
     currentlyPaths();
   }
 };
+
+
+// compress "C:\Users\Home\Desktop\folder test\image.png" "C:\Users\Home\Desktop\folder test\myCompressFile"
+// decompress "C:\Users\Home\Desktop\folder test\myCompressFile.png.brs" "C:\Users\Home\Desktop\folder test\new\bbb"

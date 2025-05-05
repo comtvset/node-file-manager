@@ -2,19 +2,19 @@
 
 ![](https://github.com/comtvset/node-file-manager/blob/develop/src/assets/cover.png)
 
-The program is started by npm-script `npm run` start in following way:
+The program is started using the following npm script:
 
 ```bash
 
-npm  run  start  --  --username=your_username
+npm run start  --  --username=your_username
 
 ```
 
-or
+or simply
 
 ```bash
 
-npm  run  start
+npm run start
 
 ```
 
