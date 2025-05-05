@@ -18,7 +18,7 @@ export const help = async () => {
     console.log('\n\x1b[0m');
     currentlyPaths();
   } catch (error) {
-    console.log(`\x1b[31m>>> Error: ${error.message} \x1b[0m`);
+    console.error(`\x1b[31m>>> Error: ${error.message} \x1b[0m`);
     currentlyPaths();
   }
 };

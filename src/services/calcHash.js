@@ -32,7 +32,7 @@ export const calculateHash = async (line) => {
     );
     currentlyPaths();
   } catch (error) {
-    console.log(`\n\x1b[31m>>> Error: ${error.message} \x1b[0m`);
+    console.error(`\n\x1b[31m>>> Error: ${error.message} \x1b[0m`);
     currentlyPaths();
   }
 };

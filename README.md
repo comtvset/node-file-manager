@@ -2,21 +2,27 @@
 
 ![](https://github.com/comtvset/node-file-manager/blob/develop/src/assets/cover.png)
 
-The program is started by npm-script `npm run` start in following way:
+The program is started using the following npm script:
 
 ```bash
 
-npm  run  start  --  --username=your_username
+npm run start  --  --username=your_username
 
 ```
 
-or
+or simply
 
 ```bash
 
-npm  run  start
+npm run start
 
 ```
+
+### Case Sensitivity Notice ⚠️⚠️⚠️
+File-Manager is case-sensitive when handling file paths. Always use the exact casing as shown in File Explorer.
+
+✅ Correct: `C:\Users\User\My Folder`  
+❌ Incorrect: `c:\users\user\my folder`
 
 ### Available commands:
 
@@ -38,7 +44,7 @@ npm  run  start
 | &nbsp;     | `--architecture` | Display the CPU architecture of the system                  |
 | hash       |                  | Display the hash of the specified file                      | `hash C:\Users\User\checkFile.txt`                                                        |
 | compress   |                  | Compress the specified file to the destination path         | `compress C:\Users\User\compressFile.txt C:\Users\User\newFolder\nameFile`                |
-| decompress |                  | Decompress the specified file to the destination path       | `decompress "C:\Users\User\my compress file.jpg.br" "C:\Users\User\new folder\name file"` |
+| decompress |                  | Decompress the specified file to the destination path       | `decompress "C:\Users\User\my compress file.jpg.br" "C:\Users\User\new folder\"` |
 | ls         |                  | Lists the contents of the current directory                 |
 | help       |                  | Displays help message                                       |
 | .exit      |                  | Exits the program                                           |

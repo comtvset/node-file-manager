@@ -42,7 +42,7 @@
                                   example: compress C:\Users\User\compressFile.txt C:\Users\User\newFolder\nameFile
 
  decompress <path> <destination>  Decompress the specified file to the destination path
-                                  example: decompress "C:\Users\User\my compress file.jpg.br" "C:\Users\User\new folder\name file"
+                                  example: decompress "C:\Users\User\my compress file.jpg.br" "C:\Users\User\new folder\"
 
  ls                               Lists the contents of the current directory
 
